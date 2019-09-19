@@ -2,6 +2,7 @@ package edu.mum.cs.cs472.labs.controller;
 
 import edu.mum.cs.cs472.labs.model.Quiz;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,37 +29,18 @@ public class QuizServlet extends HttpServlet {
             quiz = new Quiz();
             session.setAttribute(sessionName, quiz);
         }
+        req.setAttribute("quiz",quiz);
+
+
         //out.println((Quiz)session.getAttribute(sessionName));
         if(quiz.currentQuestion() <= quiz.maxQuestionNos()) {
-            out.println("<html>\n" +
-                    "<head>\n" +
-                    "    <link href=\"css/quiz.css\" rel=\"stylesheet\" type=\"text/css\">\n" +
-                    "</head>\n" +
-                    "<body>\n" +
-                    "<div>\n" +
-                    "    <h2>The Number Quiz</h2>\n" +
-                    "\n" +
-                    "    <p>Your Current Sqore is " + quiz.getScore() + "</p>\n" +
-                    "\n" +
-                    "    <p>Guess the next number in the sequence</p>\n" +
-                    "\n" +
-                    "    <p>" + quiz.getQuestion(quiz.currentQuestion()) + "</p>\n" +
-                    "\n" +
-                    "    <form action=\"quiz\" method=\"post\">\n" +
-                    "        <label for=\"ans\">Your Answer </label><input type=\"number\" name=\"ans\" id=\"ans\" required>\n" +
-                    "        <br><input type=\"hidden\" value=\"" + quiz.currentQuestion() + "\" name=\"questionNo\"></br>\n" +
-                    "        <input type=\"submit\" value=\"Submit\">\n" +
-                    "    </form>\n" +
-                    "\n" +
-                    "</div>\n" +
-                    "\n" +
-                    "</body>\n" +
-                    "</html>");
-        }else{
+            RequestDispatcher rd = req.getRequestDispatcher("views/quiz.jsp");
+            rd.forward(req,resp);
 
-            out.println("<h2>The Number Quiz</h2>");
-            out.println("<p>Your Current Sqore is \"" + quiz.getScore() + "\"</p>");
-            out.println("<p>Tou have completed the number quiz with a score of  \"" + quiz.getScore() + "\" out of "+ (quiz.currentQuestion()-1) +" </p>");
+        }else{
+            RequestDispatcher rd = req.getRequestDispatcher("views/result.jsp");
+            rd.forward(req,resp);
+
         }
     }
 
